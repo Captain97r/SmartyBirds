@@ -11,6 +11,11 @@ class Game
 	sf::Event *event;
 	sf::Clock clock;
 	float time;
+	int num;
+
+	float max_fitness;
+	float sc = 0;
+	int generation;
 
 	Background *background1;
 	Background *background2;
@@ -29,6 +34,7 @@ class Game
 
 	void update_objects();
 	void draw_objects();
+	void draw_text();
 	void key_listener();
 	void collision_detector(Bird *bird);
 	void dispose_bird();
@@ -36,15 +42,11 @@ class Game
 public:
 	sf::RenderWindow *window;
 
-	Bird *bird;
-	Bird *bird2;
-	Bird *bird3;
-	Bird *bird4;
-	Bird *bird5;
+	Bird **bird;
 
-	Game();
+	Game(int num, int generation);
 	~Game();
-	void go();
+	float go(float f);
 
 	sf::Vector2f* get_distances();
 	bool is_all_birds_die();

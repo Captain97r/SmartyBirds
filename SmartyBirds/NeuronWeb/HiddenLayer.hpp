@@ -15,5 +15,6 @@ public:
 	~HiddenLayer();
 	double* back_propagation(double *targets, int targets_length);
 	double* get_outputs();
+	//Neuron** get_neurons();
 };
 

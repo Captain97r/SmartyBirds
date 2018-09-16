@@ -5,7 +5,7 @@
 Bird::Bird()
 {
 	speed = sf::Vector2f(0, 0);
-	position = sf::Vector2f(150, 350); 
+	position = sf::Vector2f(150, 270); 
 	acceleration = sf::Vector2f(0, 500);
 
 	bird_img.loadFromFile("images/sprites.png");
@@ -18,6 +18,8 @@ Bird::Bird()
 	bird.setPosition(position);
 	circle.setPosition(position.x + 10, position.y + 1);
 	//circle.setFillColor(sf::Color::Blue);
+
+	fitness = 0;
 }
 
 
@@ -35,6 +37,8 @@ void Bird::update(float time)
 
 	bird.setPosition(position);
 	circle.setPosition(position.x + 10, position.y + 1);
+
+	if (is_alive) fitness += time / 100;
 }
 
 
@@ -61,4 +65,10 @@ void Bird::stop()
 	speed = sf::Vector2f(0, 0);
 	position = sf::Vector2f(-50, -50);
 	acceleration = sf::Vector2f(0, 0);
+}
+
+
+float Bird::get_fitness()
+{
+	return fitness;
 }

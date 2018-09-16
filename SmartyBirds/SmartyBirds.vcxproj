@@ -130,6 +130,7 @@
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="GeneticAlghorithm.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NeuronWeb\HiddenLayer.cpp" />
     <ClCompile Include="NeuronWeb\InputLayer.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Floor.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Gate.hpp" />
+    <ClInclude Include="GeneticAlghorithm.hpp" />
     <ClInclude Include="NeuronWeb\HiddenLayer.hpp" />
     <ClInclude Include="NeuronWeb\InputLayer.hpp" />
     <ClInclude Include="NeuronWeb\Neuron.hpp" />

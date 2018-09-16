@@ -13,6 +13,7 @@ class Bird
 	sf::Vector2f position;
 	sf::Vector2f acceleration;
 
+	float fitness;
 
 public:
 	sf::Sprite bird;
@@ -27,5 +28,6 @@ public:
 	sf::Vector2f get_coords();
 	sf::Vector2f get_distance_to_gate(Gate *gate);
 	void stop();
+	float get_fitness();
 };
 

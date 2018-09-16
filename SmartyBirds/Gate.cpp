@@ -85,5 +85,5 @@ float Gate::get_next_gate_coords()
 
 sf::Vector2f Gate::get_gate_coords()
 {
-	return sf::Vector2f(gate_up.getPosition().x + gate_width, gate_down.getPosition().y - (clearance / 2));
+	return sf::Vector2f(gate_up.getPosition().x + gate_width * 4, gate_down.getPosition().y - (clearance / 2));
 }

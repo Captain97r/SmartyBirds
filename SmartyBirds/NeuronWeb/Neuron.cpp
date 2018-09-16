@@ -41,3 +41,23 @@ double Neuron::weights_sum()
 
 	return result;
 }
+
+
+void Neuron::set_weights(double* weights)
+{
+	for (int i = 0; i < inputs_num; i++)
+		this->weights[i] = weights[i];
+}
+
+
+double* Neuron::get_weights()
+{
+	return weights;
+}
+
+
+void Neuron::set_inputs(double* inputs)
+{
+	this->inputs = inputs;
+}
+
