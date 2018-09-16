@@ -37,15 +37,18 @@ int main()
 		while (game.window->isOpen())
 		{
 			sf::Vector2f *dist = game.get_distances();
+			double *outputs = new double[web_nums];
 
 			for (int i = 0; i < web_nums; i++)
 			{
 				web[i]->set_inputs(dist[i]);
-				if (web[i]->get_outputs()[0] > 0.5) game.bird[i]->jump();
+
+				outputs[i] = web[i]->get_outputs()[0];
+				if (outputs[i] > 0.5) game.bird[i]->jump();
 			}
 
-
 			max_fitness = game.go(max_fitness);
+			delete[] outputs;
 			delete[] dist;
 
 			if (game.is_all_birds_die()) break;

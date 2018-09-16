@@ -147,24 +147,6 @@ void Game::draw_objects()
 
 	for (int i = 0; i < num; i++)
 		window->draw(bird[i]->bird);
-	//window->draw(bird->circle);
-	//window.draw(gate1.rect_lower_gate);
-	//window.draw(gate1.rect_upper_gate);
-	//window.draw(gate1.rect_lower_gate_tip);
-	//window.draw(gate1.rect_upper_gate_tip);
-	//window.draw(gate2.rect_lower_gate);
-	//window.draw(gate2.rect_upper_gate);
-	//window.draw(gate2.rect_lower_gate_tip);
-	//window.draw(gate2.rect_upper_gate_tip);
-	//window.draw(gate3.rect_lower_gate);
-	//window.draw(gate3.rect_upper_gate);
-	//window.draw(gate3.rect_lower_gate_tip);
-	//window.draw(gate3.rect_upper_gate_tip);
-	//window.draw(gate4.rect_lower_gate);
-	//window.draw(gate4.rect_upper_gate);
-	//window.draw(gate4.rect_lower_gate_tip);
-	//window.draw(gate4.rect_upper_gate_tip);
-
 
 	draw_text();
 
