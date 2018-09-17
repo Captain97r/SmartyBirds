@@ -31,8 +31,8 @@ public:
 
 	bool evolution(Web** webs, float* fitnesses, int num);
 
-	void set_inputs(double *inputs); 
+	void set_inputs(std::vector<double> inputs); 
 	void set_inputs(sf::Vector2f inputs);
-	double* get_outputs();
+	std::vector<double> get_outputs();
 };
 

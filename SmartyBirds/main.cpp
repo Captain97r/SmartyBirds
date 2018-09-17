@@ -7,7 +7,7 @@
 
 int web_inputs_num = 2;
 int web_hidden_layers_num = 1;
-int web_neurons_in_hidden_layers[2] = { 6 };
+int web_neurons_in_hidden_layers[1] = { 6 };
 int web_outputs_num = 1;
 int web_nums = 100;
 
@@ -37,18 +37,17 @@ int main()
 		while (game.window->isOpen())
 		{
 			sf::Vector2f *dist = game.get_distances();
-			double *outputs = new double[web_nums];
+			std::vector<double> outputs;
 
 			for (int i = 0; i < web_nums; i++)
 			{
 				web[i]->set_inputs(dist[i]);
 
-				outputs[i] = web[i]->get_outputs()[0];
+				outputs.push_back(web[i]->get_outputs()[0]);
 				if (outputs[i] > 0.5) game.bird[i]->jump();
 			}
 
 			max_fitness = game.go(max_fitness);
-			delete[] outputs;
 			delete[] dist;
 
 			if (game.is_all_birds_die()) break;
@@ -61,7 +60,6 @@ int main()
 		create_new = web[0]->evolution(web, fitnesses, web_nums);
 
 		delete[] fitnesses;
-
 	}
 
 	return 0;

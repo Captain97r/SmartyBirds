@@ -1,5 +1,6 @@
 #pragma once
 #include "Neuron.hpp"
+#include <vector>
 
 class HiddenLayer
 {
@@ -11,10 +12,10 @@ class HiddenLayer
 public:
 	Neuron **neurons;
 
-	HiddenLayer(int inputs_quantity, int neurons_quantity, double *inputs);
+	HiddenLayer(int inputs_quantity, int neurons_quantity, std::vector<double> inputs);
 	~HiddenLayer();
 	double* back_propagation(double *targets, int targets_length);
-	double* get_outputs();
+	std::vector<double> get_outputs();
 	//Neuron** get_neurons();
 };
 

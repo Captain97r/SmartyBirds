@@ -2,17 +2,20 @@
 #include <cmath>
 
 
-Neuron::Neuron(int previous_neurons_quantity, double *input_data)
+Neuron::Neuron(int previous_neurons_quantity, std::vector<double> input_data)
 {
 	inputs_num = previous_neurons_quantity;
-	weights = new double[previous_neurons_quantity];
+
+	weights.reserve(previous_neurons_quantity);
+	for (int i = 0; i < previous_neurons_quantity; i++)
+		weights.push_back(0);
+
 	inputs = input_data;
 }
 
 
 Neuron::~Neuron()
 {
-	delete[] weights;
 }
 
 
@@ -43,21 +46,20 @@ double Neuron::weights_sum()
 }
 
 
-void Neuron::set_weights(double* weights)
+void Neuron::set_weights(std::vector<double> weights)
 {
 	for (int i = 0; i < inputs_num; i++)
 		this->weights[i] = weights[i];
 }
 
 
-double* Neuron::get_weights()
+std::vector<double> Neuron::get_weights()
 {
 	return weights;
 }
 
 
-void Neuron::set_inputs(double* inputs)
+void Neuron::set_inputs(std::vector<double> inputs)
 {
 	this->inputs = inputs;
 }
-

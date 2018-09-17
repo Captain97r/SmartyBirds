@@ -19,12 +19,6 @@
     <Filter Include="Файлы заголовков\NeuronWeb">
       <UniqueIdentifier>{13056445-ef6c-492e-bf7e-7b346c5b2555}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\GeneticAlg">
-      <UniqueIdentifier>{58b344a9-8622-40f0-848e-4a763c083bb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Файлы заголовков\GeneticAlg">
-      <UniqueIdentifier>{e74fb6bd-939a-48a1-b38a-7abce6b8f476}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NeuronWeb\HiddenLayer.cpp">
@@ -57,9 +51,6 @@
     <ClCompile Include="Background.cpp">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
-    <ClCompile Include="GeneticAlghorithm.cpp">
-      <Filter>Исходные файлы\GeneticAlg</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NeuronWeb\HiddenLayer.hpp">
@@ -88,9 +79,6 @@
     </ClInclude>
     <ClInclude Include="Background.hpp">
       <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneticAlghorithm.hpp">
-      <Filter>Файлы заголовков\GeneticAlg</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

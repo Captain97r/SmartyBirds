@@ -3,7 +3,7 @@
 #include <random>
 
 
-HiddenLayer::HiddenLayer(int inputs_quantity, int neurons_quantity, double *inputs)
+HiddenLayer::HiddenLayer(int inputs_quantity, int neurons_quantity, std::vector<double> inputs)
 {
 	this->inputs_quantity = inputs_quantity;
 	this->neurons_quantity = neurons_quantity;
@@ -48,7 +48,7 @@ double* HiddenLayer::back_propagation(double *targets, int targets_length)
 		hidden_errors[i] = new double[inputs_quantity];
 
 	// Высчитываем ошибку на выходах
-	double *outputs = get_outputs();
+	std::vector<double> outputs = get_outputs();
 
 	for (int i = 0; i < targets_length; i++)
 		errors[i] = targets[i] - outputs[i];
@@ -71,7 +71,6 @@ double* HiddenLayer::back_propagation(double *targets, int targets_length)
 			error_of_previous_layer[i] += hidden_errors[j][i];
 
 	delete[] errors;
-	delete[] outputs;
 	for (int i = 0; i < neurons_quantity; i++)
 		delete[] hidden_errors[i];
 	delete[] hidden_errors;
@@ -80,10 +79,11 @@ double* HiddenLayer::back_propagation(double *targets, int targets_length)
 }
 
 
-double* HiddenLayer::get_outputs()
+std::vector<double> HiddenLayer::get_outputs()
 {
-	double* result = new double[neurons_quantity];
+	std::vector<double> result;
+
 	for (int i = 0; i < neurons_quantity; i++)
-		result[i] = neurons[i]->sigm_conversion();
+		result.push_back(neurons[i]->sigm_conversion());
 	return result;
 }

@@ -11,23 +11,22 @@ Web::Web(int inputs_num, int hidden_layers_num, int* neurons_in_hidden_layers, i
 	this->inputs_num = inputs_num;
 
 	int prev_inputs_num;
-	double *prev_inputs;
+	std::vector<double> prev_inputs;
 
 	input_layer = new InputLayer(inputs_num);
 	prev_inputs_num = inputs_num;
-	prev_inputs = input_layer->outputs;
+	prev_inputs = input_layer->get_outputs();
 
 	hidden_layers = new HiddenLayer*[hidden_layers_num];
 	for (int i = 0; i < hidden_layers_num; i++)
 	{
 		hidden_layers[i] = new HiddenLayer(prev_inputs_num, neurons_in_hidden_layers[i], prev_inputs);
+
 		prev_inputs_num = neurons_in_hidden_layers[i];
 		prev_inputs = hidden_layers[i]->get_outputs();
 	}
 
 	output_layer = new HiddenLayer(prev_inputs_num, outputs_num, prev_inputs);
-
-	delete[] prev_inputs;
 }
 
 
@@ -53,35 +52,41 @@ void Web::back_propagation(double *targets)
 }
 
 
-void Web::set_inputs(double *inputs)
+void Web::set_inputs(std::vector<double> inputs)
 {
 	for (int i = 0; i < inputs_num; i++)
 		input_layer->outputs[i] = inputs[i];
 
+	for (int i = 0; i < inputs_num; i++)
+		hidden_layers[0]->neurons[i]->set_inputs(input_layer->get_outputs());
+
 	for (int i = 1; i < hidden_layers_num; i++)
 		for (int j = 0; j < neurons_in_hidden_layers[i]; j++)
-			hidden_layers[i]->neurons[j]->inputs = hidden_layers[i - 1]->get_outputs();
+			hidden_layers[i]->neurons[j]->set_inputs(hidden_layers[i - 1]->get_outputs());
 
 	for (int i = 0; i < outputs_num; i++)
-		output_layer->neurons[i]->inputs = hidden_layers[hidden_layers_num - 1]->get_outputs();
+		output_layer->neurons[i]->set_inputs(hidden_layers[hidden_layers_num - 1]->get_outputs());
 }
 
 
 void Web::set_inputs(sf::Vector2f inputs)
 {
-		input_layer->outputs[0] = inputs.x / 500;
-		input_layer->outputs[1] = inputs.y / 100;
+	input_layer->outputs[0] = inputs.x / 500;
+	input_layer->outputs[1] = inputs.y / 100;
+
+	for (int i = 0; i < inputs_num; i++)
+		hidden_layers[0]->neurons[i]->set_inputs(input_layer->get_outputs());
 
 	for (int i = 1; i < hidden_layers_num; i++)
 		for (int j = 0; j < neurons_in_hidden_layers[i]; j++)
-			hidden_layers[i]->neurons[j]->inputs = hidden_layers[i - 1]->get_outputs();
+			hidden_layers[i]->neurons[j]->set_inputs(hidden_layers[i - 1]->get_outputs());
 
 	for (int i = 0; i < outputs_num; i++)
-		output_layer->neurons[i]->inputs = hidden_layers[hidden_layers_num - 1]->get_outputs();
+		output_layer->neurons[i]->set_inputs(hidden_layers[hidden_layers_num - 1]->get_outputs());
 }
 
 
-double* Web::get_outputs()
+std::vector<double> Web::get_outputs()
 {
 	return output_layer->get_outputs();
 }
@@ -101,7 +106,7 @@ bool Web::evolution(Web** webs, float* fitnesses, int num)
 
 	mutation(webs, num);
 
-	return worth_webs_nums < 2;
+	return worth_webs_nums < 1;
 }
 
 int Web::selection(Web** best_webs, Web** webs, float* fitnesses, int num)
@@ -136,35 +141,40 @@ int Web::selection(Web** best_webs, Web** webs, float* fitnesses, int num)
 
 void Web::crossover(Web** webs, Web** best_webs, int num, int best_num)
 {
-	// num гарантированно четное!
-	//Web** result_webs = new Web*[num];
-	//for (int i = 0; i < num; i++)
-	//	result_webs[i] = new Web(this->inputs_num, this->hidden_layers_num, this->neurons_in_hidden_layers, this->outputs_num);
-
 	std::random_device random_device;
 	std::mt19937 generator(random_device());
-	std::uniform_real_distribution<> separator_pos_distribution(1, 6);
 	std::uniform_real_distribution<> parent_distribution(0, best_num);
-
-	int neurons_to_crossover = 0;
-	for (int i = 0; i < hidden_layers_num; i++)
-		neurons_to_crossover += neurons_in_hidden_layers[i];
 
 	for (int i = 0; i < num; i++)
 	{
-		int separator_pos = separator_pos_distribution(generator);
 		int first_parent = parent_distribution(generator);
 		int second_parent = parent_distribution(generator);
 		if(best_num != 1)
 			while (second_parent == first_parent)
 				second_parent = parent_distribution(generator);
 
-		for (int j = 0; j < neurons_to_crossover; j ++)
+		for (int t = 0; t < hidden_layers_num; t++)
 		{
-			if (j > separator_pos) webs[i]->hidden_layers[0]->neurons[j]->set_weights(best_webs[second_parent]->hidden_layers[0]->neurons[j]->get_weights());
-			else webs[i]->hidden_layers[0]->neurons[j]->set_weights(best_webs[first_parent]->hidden_layers[0]->neurons[j]->get_weights());
+			std::uniform_real_distribution<> separator_pos_distribution(0, neurons_in_hidden_layers[t] + 1);
+			int separator_pos = separator_pos_distribution(generator);
+			int neurons_to_crossover = neurons_in_hidden_layers[t];
+
+			for (int j = 0; j < neurons_to_crossover; j++)
+			{
+				if (j >= separator_pos) webs[i]->hidden_layers[t]->neurons[j]->set_weights(best_webs[second_parent]->hidden_layers[t]->neurons[j]->get_weights());
+				else webs[i]->hidden_layers[t]->neurons[j]->set_weights(best_webs[first_parent]->hidden_layers[t]->neurons[j]->get_weights());
+			}
 		}
-		webs[i]->output_layer->neurons[0]->set_weights(best_webs[first_parent]->output_layer->neurons[0]->get_weights());
+
+		std::uniform_real_distribution<> separator_pos_distribution(0, outputs_num + 1);
+		int separator_pos = separator_pos_distribution(generator);
+		int neurons_to_crossover = outputs_num;
+
+		for (int j = 0; j < neurons_to_crossover; j++)
+		{
+			if (j >= separator_pos) webs[i]->output_layer->neurons[j]->set_weights(best_webs[second_parent]->output_layer->neurons[j]->get_weights());
+			else webs[i]->output_layer->neurons[j]->set_weights(best_webs[first_parent]->output_layer->neurons[j]->get_weights());
+		}
 
 	}
 }
@@ -177,7 +187,7 @@ void Web::mutation(Web** webs, int num)
 	std::uniform_real_distribution<> mutate_distribution(0, 1000);
 	std::uniform_real_distribution<> mutation_chance_distribution(0, 100);
 
-	double *weights = nullptr;
+	std::vector<double> weights;
 
 	for (int i = 0; i < num; i++)
 	{
@@ -186,9 +196,9 @@ void Web::mutation(Web** webs, int num)
 			weights = webs[i]->hidden_layers[0]->neurons[j]->get_weights();
 			for (int k = 0; k < inputs_num; k++)
 			{
-				if (mutation_chance_distribution(generator) < 20)
+				if (mutation_chance_distribution(generator) < 25)
 				{
-					float mutation_factor = 1 + ((((float)(mutate_distribution(generator)) / 1000) - 0.5) * 3 + (((float)(mutate_distribution(generator)) / 1000) - 0.5));
+					float mutation_factor = 1 + ((((float)(mutate_distribution(generator)) / 1000) - 0.5) * 5 + (((float)(mutate_distribution(generator)) / 1000) - 0.5) * 2);
 					weights[k] *= mutation_factor;
 				}
 			}
